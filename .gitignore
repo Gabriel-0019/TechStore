@@ -3,16 +3,9 @@
 ################################################################################
 
 /.vs
-/TechStore/.vs
-/TechStore/BackEnd/bin
-/TechStore/BackEnd/obj
-/TechStore/DAL/bin
-/TechStore/DAL/obj
-/TechStore/Entities/bin
-/TechStore/Entities/obj
-/BackEnd/bin/Debug/net8.0
+/BackEnd/bin
 /BackEnd/obj
-/DAL/bin/Debug/net8.0
+/DAL/bin
 /DAL/obj
-/Entities/bin/Debug/net8.0
+/Entities/bin
 /Entities/obj
