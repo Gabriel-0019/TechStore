@@ -10,3 +10,9 @@
 /TechStore/DAL/obj
 /TechStore/Entities/bin
 /TechStore/Entities/obj
+/BackEnd/bin/Debug/net8.0
+/BackEnd/obj
+/DAL/bin/Debug/net8.0
+/DAL/obj
+/Entities/bin/Debug/net8.0
+/Entities/obj
