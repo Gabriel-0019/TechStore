@@ -4,9 +4,9 @@
 
 /.vs
 /TechStore/.vs
-/TechStore/BackEnd/bin/Debug/net8.0
+/TechStore/BackEnd/bin
 /TechStore/BackEnd/obj
-/TechStore/DAL/bin/Debug/net8.0
+/TechStore/DAL/bin
 /TechStore/DAL/obj
-/TechStore/Entities/bin/Debug/net8.0
+/TechStore/Entities/bin
 /TechStore/Entities/obj
