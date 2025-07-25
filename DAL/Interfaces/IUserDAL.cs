@@ -9,6 +9,7 @@ namespace DAL.Interfaces
 {
     public interface IUserDAL : IGenericalDAL<User>
     {
-        public User Login(User user);
+        public User GetByEmail(string email);
+        public bool AddToken(PassResetToken entity);
     }
 }

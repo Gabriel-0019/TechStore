@@ -20,6 +20,7 @@ namespace Entities
         {
         }
 
+        public DbSet<PassResetToken> PassResetTokens { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -51,6 +52,30 @@ namespace Entities
                       .HasColumnName("Password")
                       .IsRequired()
                       .HasMaxLength(65);
+            });
+
+            modelBuilder.Entity<PassResetToken>(entity =>
+            {
+                entity.ToTable("PassResetTokens");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Token)
+                      .HasMaxLength(255)
+                      .IsRequired();
+
+                entity.Property(e => e.CreatedAt)
+                      .HasColumnType("timestamp")
+                      .IsRequired();
+
+                modelBuilder.Entity<PassResetToken>()
+                    .Property(p => p.UserId)
+                    .HasColumnName("UserID");
+
             });
         }
     }

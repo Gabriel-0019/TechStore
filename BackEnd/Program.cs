@@ -1,3 +1,4 @@
+using BackEnd.Helpers;
 using BackEnd.Models;
 using Entities;
 using Entities.Utilities;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TechStoreDBContext>(options => options.UseNpgsql(connString));
 Util.ConnectionString = connString;
+
+builder.Services.AddTransient<EmailSender>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

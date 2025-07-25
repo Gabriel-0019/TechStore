@@ -11,8 +11,6 @@ namespace Entities
     [Table("Users")]
     public class User
     {
-        //[Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -22,5 +20,7 @@ namespace Entities
         [Required]
         [StringLength(65)]
         public string Password { get; set; }
+
+        public virtual ICollection<PassResetToken> PassResetTokens { get; set; } = [];
     }
 }

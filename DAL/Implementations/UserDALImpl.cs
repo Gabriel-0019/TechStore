@@ -15,13 +15,21 @@ namespace DAL.Implementations
         {
             using var context = new TechStoreDBContext();
             context.Users.Add(entity);
-            context.SaveChanges();
-            return true;
+            var result = context.SaveChanges();
+            return result > 0;
         }
 
         public void AddRange(IEnumerable<User> entities)
         {
             throw new NotImplementedException();
+        }
+
+        public bool AddToken(PassResetToken entity)
+        {
+            using var context = new TechStoreDBContext();
+            context.PassResetTokens.Add(entity);
+            var result = context.SaveChanges();
+            return result > 0;
         }
 
         public IEnumerable<User> Find(Expression<Func<User, bool>> predicate)
@@ -41,10 +49,10 @@ namespace DAL.Implementations
             return users;
         }
 
-        public User Login(User user)
+        public User GetByEmail(string email)
         {
             using var context = new TechStoreDBContext();
-            var userFound = context.Users.Where(u => u.Email == user.Email);
+            var userFound = context.Users.Where(u => u.Email == email);
             if (userFound.Any())
                 return userFound.First();
             return new User();

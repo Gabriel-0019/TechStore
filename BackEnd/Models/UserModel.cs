@@ -36,18 +36,6 @@ namespace BackEnd.Models
     {
         public string Email { get; set; }
         public string Password { get; set; }
-
-        public static User Convert(UserLogin user)
-        {
-            if (user is null)
-                return new User();
-
-            return new User()
-            {
-                Email = user.Email,
-                Password = user.Password,
-            };
-        }
     }
 
     public class GetUsers
