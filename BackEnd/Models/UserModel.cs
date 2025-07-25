@@ -57,4 +57,10 @@ namespace BackEnd.Models
             };
         }
     }
+
+    public class ConfirmPassReset
+    {
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
+    }
 }

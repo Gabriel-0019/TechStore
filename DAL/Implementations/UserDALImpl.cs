@@ -39,7 +39,9 @@ namespace DAL.Implementations
 
         public User Get(int id)
         {
-            throw new NotImplementedException();
+            using var context = new TechStoreDBContext();
+            var userFound = context.Users.Where(u => u.Id == id);
+            return userFound.Any() ? userFound.First() : new User();
         }
 
         public IEnumerable<User> GetAll()
@@ -58,6 +60,13 @@ namespace DAL.Implementations
             return new User();
         }
 
+        public PassResetToken GetTokenPass(string token)
+        {
+            using var context = new TechStoreDBContext();
+            var tokenFound = context.PassResetTokens.Where(u => u.Token == token);
+            return tokenFound.Any() ? tokenFound.First() : new PassResetToken();
+        }
+
         public bool Remove(User entity)
         {
             throw new NotImplementedException();
@@ -68,6 +77,14 @@ namespace DAL.Implementations
             throw new NotImplementedException();
         }
 
+        public bool DeleteToken(PassResetToken passResetToken)
+        {
+            using var context = new TechStoreDBContext();
+            context.PassResetTokens.Remove(passResetToken);
+            var result = context.SaveChanges();
+            return result > 0;
+        }
+
         public User SingleOrDefault(Expression<Func<User, bool>> predicate)
         {
             throw new NotImplementedException();
@@ -76,6 +93,17 @@ namespace DAL.Implementations
         public bool Update(User entity)
         {
             throw new NotImplementedException();
+        }
+
+        public bool ChangePassword(User entity)
+        {
+            entity.Password = entity.Password;
+            using var context = new TechStoreDBContext();
+            context.Users.Attach(entity);
+            context.Entry(entity).Property(x => x.Password).IsModified = true;
+
+            int result = context.SaveChanges();
+            return result > 0;
         }
     }
 }

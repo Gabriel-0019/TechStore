@@ -172,5 +172,36 @@ namespace BackEnd.Controllers
                 throw;
             }
         }
+
+        [HttpPost, Route("[action]")]
+        public JsonResult ConfirmPassReset(ConfirmPassReset confirmPassReset)
+        {
+            try
+            {
+                var resetToken = userDAL.GetTokenPass(confirmPassReset.Token);
+
+                if (resetToken is null || resetToken.CreatedAt < DateTime.Now)
+                    return new JsonResult("Token expired");
+
+                var user = userDAL.Get(resetToken.UserId);
+
+                if (user.Id == 0)
+                    return new JsonResult("User not found");
+
+                user.Password = PassHelper.HashPassword(confirmPassReset.NewPassword);
+                userDAL.ChangePassword(user);
+
+                var tokenDeleted = userDAL.DeleteToken(resetToken);
+
+                if (tokenDeleted)
+                    return new JsonResult("Password Changed");
+
+                return new JsonResult("Password Changed");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
