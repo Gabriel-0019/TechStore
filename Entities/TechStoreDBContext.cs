@@ -22,6 +22,7 @@ namespace Entities
 
         public DbSet<PassResetToken> PassResetTokens { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -76,6 +77,34 @@ namespace Entities
                     .Property(p => p.UserId)
                     .HasColumnName("UserID");
 
+            });
+
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.ToTable("Categories");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                      .HasColumnName("Name")
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.IsActive)
+                      .HasColumnName("IsActive")
+                      .IsRequired();
+
+                entity.Property(e => e.ParentCategoryId)
+                      .HasColumnName("ParentCategoryID");
+
+                entity.HasOne(e => e.ParentCategory)
+                      .WithMany(e => e.Children)
+                      .HasForeignKey(e => e.ParentCategoryId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
