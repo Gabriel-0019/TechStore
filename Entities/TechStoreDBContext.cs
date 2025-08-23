@@ -98,13 +98,13 @@ namespace Entities
                       .HasColumnName("IsActive")
                       .IsRequired();
 
-                entity.Property(e => e.ParentCategoryId)
-                      .HasColumnName("ParentCategoryID");
+                entity.Property(e => e.CreatedAt)
+                      .HasColumnType("timestamp")
+                      .IsRequired();
 
-                entity.HasOne(e => e.ParentCategory)
-                      .WithMany(e => e.Children)
-                      .HasForeignKey(e => e.ParentCategoryId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.ModifiedAt)
+                      .HasColumnType("timestamp")
+                      .IsRequired();
             });
         }
     }

@@ -13,6 +13,8 @@ namespace DAL.Implementations
     {
         public bool Add(Category entity)
         {
+            entity.CreatedAt = DateTime.Now;
+            entity.ModifiedAt = DateTime.Now;
             using var context = new TechStoreDBContext();
             context.Categories.Add(entity);
             var result = context.SaveChanges();
@@ -31,36 +33,15 @@ namespace DAL.Implementations
 
         public Category Get(int id)
         {
-            throw new NotImplementedException();
+            using var context = new TechStoreDBContext();
+            var categoryFound = context.Categories.Where(c => c.Id == id);
+            return categoryFound.Any() ? categoryFound.First() : new Category();
         }
 
         public IEnumerable<Category> GetAll()
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<GetCategories> GetCategories()
-        {
             using var context = new TechStoreDBContext();
-            var categories = (from l1 in context.Categories
-                              where l1.ParentCategoryId == null
-                              from l2 in context.Categories
-                                  .Where(c => c.ParentCategoryId == l1.Id)
-                                  .DefaultIfEmpty()
-                              from l3 in context.Categories
-                                  .Where(c => l2 != null && c.ParentCategoryId == l2.Id)
-                                  .DefaultIfEmpty()
-                              select new GetCategories
-                              {
-                                  CategoryId = l1.Id,
-                                  Category = l1.Name,
-                                  SubCategory1Id = l2 != null ? l2.Id : (int?)null,
-                                  SubCategory1 = l2 != null ? l2.Name : null,
-                                  SubCategory2Id = l3 != null ? l3.Id : (int?)null,
-                                  SubCategory2 = l3 != null ? l3.Name : null
-                              }).ToList();
-
-            return categories;
+            return [.. context.Categories.OrderBy(x => x.Name)];
         }
 
         public bool Remove(Category entity)
@@ -80,7 +61,16 @@ namespace DAL.Implementations
 
         public bool Update(Category entity)
         {
-            throw new NotImplementedException();
+            entity.ModifiedAt = DateTime.Now;
+            
+            using var context = new TechStoreDBContext();
+            context.Categories.Attach(entity);
+            context.Entry(entity).Property(x => x.ModifiedAt).IsModified = true;
+            context.Entry(entity).Property(x => x.Name).IsModified = true;
+            context.Entry(entity).Property(x => x.IsActive).IsModified = true;
+            
+            var result = context.SaveChanges();
+            return result > 0;
         }
     }
 }

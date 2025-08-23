@@ -9,6 +9,5 @@ namespace DAL.Interfaces
 {
     public interface ICategoryDAL : IGenericalDAL<Category>
     {
-        public IEnumerable<GetCategories> GetCategories();
     }
 }
