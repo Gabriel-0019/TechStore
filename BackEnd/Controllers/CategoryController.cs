@@ -17,11 +17,11 @@ namespace BackEnd.Controllers
         {
             try
             {
-                return new JsonResult(categoryDAL.Add(AddCategoryModel.Convert(category)));
+                return new JsonResult(categoryDAL.Add(AddCategoryModel.Convert(category))) { StatusCode = 204 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new JsonResult(false);
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -36,11 +36,11 @@ namespace BackEnd.Controllers
                 {
                     listCategories.Add(CategoryModel.Convert(item));
                 }
-                return new JsonResult(listCategories);
+                return new JsonResult(listCategories) { StatusCode = 200 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -56,11 +56,11 @@ namespace BackEnd.Controllers
                 }
                 existingCategory.Name = category.CategoryName;
                 existingCategory.IsActive = category.IsActive;
-                return new JsonResult(categoryDAL.Update(existingCategory));
+                return new JsonResult(categoryDAL.Update(existingCategory)) { StatusCode = 204 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new JsonResult(false);
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
     }

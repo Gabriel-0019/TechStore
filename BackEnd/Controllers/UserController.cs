@@ -28,11 +28,11 @@ namespace BackEnd.Controllers
             {
                 user.Password = PassHelper.HashPassword(user.Password);
                 User entity = userModel.Convert(user);
-                return new JsonResult(userDAL.Add(entity));
+                return new JsonResult(userDAL.Add(entity)) { StatusCode = 204 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new JsonResult(false);
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -47,12 +47,11 @@ namespace BackEnd.Controllers
                 {
                     listUsers.Add(GetUsers.Convert(item));
                 }
-                return new JsonResult(listUsers);
+                return new JsonResult(listUsers) { StatusCode = 200 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -64,12 +63,12 @@ namespace BackEnd.Controllers
                 var userFound = userDAL.GetByEmail(user.Email);
 
                 if (userFound.Id != 0)
-                    return new JsonResult(PassHelper.VerifyPassword(user.Password, userFound.Password));
-                return new JsonResult(false);
+                    return new JsonResult(PassHelper.VerifyPassword(user.Password, userFound.Password)) { StatusCode = 200 };
+                return new JsonResult(false) { StatusCode = 401 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -162,14 +161,14 @@ namespace BackEnd.Controllers
                         "Reset your password",
                         html);        
 
-                    return new JsonResult("A verification email was sent to your email address");
+                    return new JsonResult("A verification email was sent to your email address") { StatusCode = 200 };
                 }
 
-                return new JsonResult("There was an error with the password reset process");
+                return new JsonResult("There was an error with the password reset process") { StatusCode = 500 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
 
@@ -189,18 +188,19 @@ namespace BackEnd.Controllers
                     return new JsonResult("User not found");
 
                 user.Password = PassHelper.HashPassword(confirmPassReset.NewPassword);
-                userDAL.ChangePassword(user);
+                var changed = userDAL.ChangePassword(user);
 
-                var tokenDeleted = userDAL.DeleteToken(resetToken);
+                if (changed) 
+                {
+                    userDAL.DeleteToken(resetToken);
+                    return new JsonResult("Password Changed") { StatusCode = 204 };
+                }
 
-                if (tokenDeleted)
-                    return new JsonResult("Password Changed");
-
-                return new JsonResult("Password Changed");
+                return new JsonResult("System error") { StatusCode = 500 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return new JsonResult("Internal server error: ", ex.ToString()) { StatusCode = 500 };
             }
         }
     }
