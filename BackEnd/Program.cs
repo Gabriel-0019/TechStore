@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<EmailTemplate>();
 string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TechStoreDBContext>(options => options.UseNpgsql(connString));
 Util.ConnectionString = connString;

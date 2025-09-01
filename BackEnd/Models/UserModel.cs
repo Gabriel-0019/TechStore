@@ -14,8 +14,8 @@ namespace BackEnd.Models
 
         [Required]
         [StringLength(25, MinimumLength = 8, ErrorMessage = "La contraseña debe tener entre 8 y 25 caracteres.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,25}$",
-        ErrorMessage = "La contraseña debe tener al menos una mayúscula, una minúscula y un carácter especial.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,25}$",
+        ErrorMessage = "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial.")]
         public string Password { get; set; }
 
         public User Convert(UserModel user)
@@ -60,7 +60,13 @@ namespace BackEnd.Models
 
     public class ConfirmPassReset
     {
+        [Required]
         public string Token { get; set; }
+
+        [Required]
+        [StringLength(25, MinimumLength = 8, ErrorMessage = "La contraseña debe tener entre 8 y 25 caracteres.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,25}$",
+        ErrorMessage = "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial.")]
         public string NewPassword { get; set; }
     }
 }
