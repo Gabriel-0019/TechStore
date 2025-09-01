@@ -16,11 +16,13 @@ namespace BackEnd.Controllers
         private readonly UserModel userModel = new();
         private readonly EmailSender emailSender;
         private readonly EmailTemplate emailTemplate;
+        private readonly IConfiguration configuration;
 
-        public UserController(EmailSender emailSender, EmailTemplate emailTemplate)
+        public UserController(EmailSender emailSender, EmailTemplate emailTemplate, IConfiguration configuration)
         {
             this.emailSender = emailSender;
             this.emailTemplate = emailTemplate;
+            this.configuration = configuration;
         }
 
         [HttpPost]
@@ -97,7 +99,7 @@ namespace BackEnd.Controllers
 
                 if (tokenSaved)
                 {
-                    string resetLink = $"http://localhost:5173/changepassword/{token}";
+                    string resetLink = $"{configuration["Email:resetLink"]}{token}";
 
                     string html = emailTemplate.GetTemplate("PasswordResetTemplate.html",
                         new Dictionary<string, string>
