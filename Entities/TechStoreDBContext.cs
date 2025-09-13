@@ -23,6 +23,9 @@ namespace Entities
         public DbSet<PassResetToken> PassResetTokens { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -76,6 +79,46 @@ namespace Entities
                 modelBuilder.Entity<PassResetToken>()
                     .Property(p => p.UserId)
                     .HasColumnName("UserID");
+
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                      .HasColumnName("Name")
+                      .IsRequired()
+                      .HasMaxLength(10);
+
+                entity.HasIndex(e => e.Name)
+                      .IsUnique();
+
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.ToTable("UserRoles");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("id")
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.RoleID)
+                      .HasColumnName("RoleID")
+                      .IsRequired();
+
+                entity.Property(e => e.UserID)
+                      .HasColumnName("UserID")
+                      .IsRequired();
 
             });
 

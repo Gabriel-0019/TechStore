@@ -67,7 +67,15 @@ namespace BackEnd.Controllers
                 var userFound = userDAL.GetByEmail(user.Email);
 
                 if (userFound.Id != 0)
-                    return new JsonResult(PassHelper.VerifyPassword(user.Password, userFound.Password)) { StatusCode = 200 };
+                {
+                    var verified = PassHelper.VerifyPassword(user.Password, userFound.Password);
+
+                    if (verified)
+                    {
+                        return new JsonResult(userDAL.GetUserVerified(user.Email)) { StatusCode = 200 };
+                    }
+                    return new JsonResult(verified) { StatusCode = 401 };
+                }
                 return new JsonResult(false) { StatusCode = 401 };
             }
             catch (Exception ex)
@@ -84,7 +92,7 @@ namespace BackEnd.Controllers
                 var user = userDAL.GetByEmail(email);
 
                 if (user.Id == 0)
-                    return new JsonResult("User not found");
+                    return new JsonResult("User not found") { StatusCode = 404 };
 
                 string token = Guid.NewGuid().ToString();
 

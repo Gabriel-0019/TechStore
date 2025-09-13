@@ -14,5 +14,6 @@ namespace DAL.Interfaces
         public PassResetToken GetTokenPass(string token);
         public bool ChangePassword(User entity);
         public bool DeleteToken(PassResetToken passResetToken);
+        public UserVerified GetUserVerified(string email);
     }
 }

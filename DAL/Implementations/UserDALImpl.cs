@@ -60,6 +60,22 @@ namespace DAL.Implementations
             return new User();
         }
 
+        public UserVerified GetUserVerified(string email)
+        { 
+            using var context = new TechStoreDBContext();
+            var userFound = context.Users.Where((u) => u.Email == email)
+                                         .Select(u => new UserVerified
+                                         { 
+                                            Id = u.Id,
+                                            Email = u.Email,
+                                            Roles = (from ur in context.UserRoles
+                                                     join r in context.Roles on ur.RoleID equals r.Id
+                                                     where ur.UserID == u.Id
+                                                     select r).ToList()
+                                         }).FirstOrDefault();
+            return userFound ?? new UserVerified();
+        }
+
         public PassResetToken GetTokenPass(string token)
         {
             using var context = new TechStoreDBContext();
